@@ -11,12 +11,17 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('order', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 255)->nullable(false);
+            $table->timestamp('order_date')->useCurrent();
+            $table->decimal('total_price', 10, 2);
+            $table->unsignedBigInteger('customer_id');
             $table->timestamps();
             $table->softDeletes();
-        });        
+
+            // Foreign key constraint
+            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade');
+        });
     }
 
     /**
@@ -24,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('order');
     }
 };
