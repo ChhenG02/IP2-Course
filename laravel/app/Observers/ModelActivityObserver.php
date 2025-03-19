@@ -1,8 +1,7 @@
 <?php
-
 namespace App\Observers;
-
-use App\Models\Order;
+use Illuminate\Database\Eloquent\Model;
+use App\Models\ActivityLog;
 
 class ModelActivityObserver {
     public function created(Model $model) {
