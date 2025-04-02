@@ -13,7 +13,11 @@ class CategoryController extends Controller
     public function getCategories()
     {
         $categories = Category::all();
-        return response()->json($categories);
+        // return response()->json($categories);
+        return response()->json([
+            'message' => 'success',
+            'data' => $categories
+        ]);
     }
 
     /**
