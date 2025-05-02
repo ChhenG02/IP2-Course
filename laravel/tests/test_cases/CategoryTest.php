@@ -13,15 +13,6 @@ class CategoryTest extends TestCase
     /**
      * Test ID: CAT-001
      * Description: Check if a category can be created
-     * Precondition: Database is migrated and empty
-     * Test Steps:
-     *   1. Create a new category with name 'Electronics'
-     *   2. Check if the category exists in the database
-     * Test Data: ['name' => 'Electronics']
-     * Expected Result: The category should exist in the database
-     * Actual Result: The category exists in the database
-     * Status: Passed
-     * Remark: None
      */
     public function test_a_category_can_be_created(): void
     {
@@ -35,15 +26,6 @@ class CategoryTest extends TestCase
     /**
      * Test ID: CAT-002
      * Description: Check if we can access the get all categories API
-     * Precondition: None
-     * Test Steps:
-     *   1. Hit the get all categories API
-     *   2. Check if the response status is 200
-     * Test Data: None
-     * Expected Result: The response status should be 200 with success message
-     * Actual Result: The response status is 200 with success message
-     * Status: Passed
-     * Remark: None
      */
     public function test_if_we_can_access_get_all_categories_api(): void
 {
@@ -54,4 +36,78 @@ class CategoryTest extends TestCase
         'data' => []
     ]);
 }
+
+/**
+ * Test ID: CAT-003
+ * Description: Check if we can get a single category by ID
+ */
+public function test_get_single_category(): void
+{
+    $category = Category::create(['name' => 'Books']);
+
+    $response = $this->get("/api/categories/{$category->id}");
+
+    $response->assertStatus(200)
+             ->assertJson([
+                 'id' => $category->id,
+                 'name' => 'Books',
+             ]);
+}
+
+/**
+ * Test ID: CAT-004
+ * Description: Check if a category can be updated
+ */
+public function test_update_category(): void
+{
+    $category = Category::create(['name' => 'Old Name']);
+
+    $response = $this->patch("/api/categories/{$category->id}", [
+        'name' => 'New Name',
+    ]);
+
+    $response->assertStatus(200)
+             ->assertJson([
+                 'message' => 'Category updated successfully',
+                 'category' => ['name' => 'New Name'],
+             ]);
+
+    $this->assertDatabaseHas('categories', ['name' => 'New Name']);
+}
+
+/**
+ * Test ID: CAT-005
+ * Description: Check if a category can be soft-deleted
+ */
+public function test_delete_category(): void
+{
+    $category = Category::create(['name' => 'To be deleted']);
+
+    $response = $this->delete("/api/categories/{$category->id}");
+
+    $response->assertStatus(200)
+             ->assertJson(['message' => 'Category deleted successfully']);
+
+    $this->assertSoftDeleted('categories', ['id' => $category->id]);
+}
+
+/**
+ * Test ID: CAT-006
+ * Description: Check if we can create a category through the API
+ */
+public function test_create_category_via_api(): void
+{
+    $response = $this->post('/api/categories', [
+        'name' => 'Clothing',
+    ]);
+
+    $response->assertStatus(200)
+             ->assertJson([
+                 'message' => 'Creating a new category',
+                 'category' => ['name' => 'Clothing'],
+             ]);
+
+    $this->assertDatabaseHas('categories', ['name' => 'Clothing']);
+}
+
 }

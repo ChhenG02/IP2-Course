@@ -16,9 +16,13 @@ class Product extends Model
         'name',
         'price',
         'description',
-        'images',
         'category_id',
     ];
+
+    protected $casts = [
+        'images' => 'array', // Allows storing as JSON string
+    ];
+    
 
     // Product belongs to a category
     public function category() {return $this->belongsTo(Category::class);}
