@@ -40,7 +40,7 @@ class ProductTest extends TestCase
 
         $response->assertStatus(200);
         $response->assertJsonStructure([
-            '*' => [ // each product item
+            '*' => [ 
                 'id',
                 'name',
                 'price',
