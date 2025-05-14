@@ -24,10 +24,4 @@ Route::get('/upload_file', function () {
 });
 Route::post('/upload', [UploadController::class, 'upload'])->name('upload');
 
-Route::get('/gallery/upload', function () {
-    return view('upload_image');
-});
-
-Route::post('/gallery/upload', [GalleryController::class, 'store'])->name('gallery.upload');
-
 require __DIR__.'/auth.php';
