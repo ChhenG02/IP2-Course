@@ -42,6 +42,6 @@ class UploadController extends Controller
             'minio_url'      => $minioUrl,
             'local_path'     => $localPath,
             'thumbnail_path' => $thumbnailPath,
-        ], 201);
+        ]);
     }
 }
