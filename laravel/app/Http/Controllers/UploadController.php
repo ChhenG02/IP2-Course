@@ -38,12 +38,14 @@ class UploadController extends Controller
         Storage::disk('public')->put($thumbnailPath, (string) $thumbnailImage->encode());
 
         // Save thumbnail to minio
-        Storage::disk('minio')->put('thumbnails/' . $thumbnailFileName, (string) $thumbnailImage->encode());
-        env('MINIO_ENDPOINT') . '/' . env('MINIO_BUCKET') . '/' . $thumbnailFileName;
+        $minioThumbnailPath = Storage::disk('minio')->put('thumbnails/' . $thumbnailFileName, (string) $thumbnailImage->encode());
+        $minioThumbnailUrl = env('MINIO_ENDPOINT') . '/' . env('MINIO_BUCKET') . '/' . $thumbnailFileName;
 
         return response()->json([
             'minio_path'     => $minioPath,
             'minio_url'      => $minioUrl,
+            'minio_thumbnail_path' => $minioThumbnailPath,
+            'minio_thumbnail_url' => $minioThumbnailUrl,
             'local_path'     => $localPath,
             'thumbnail_path' => $thumbnailPath,
         ]);
