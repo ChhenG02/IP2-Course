@@ -6,17 +6,21 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { User } from './entity/user.entity';
 import { UserService } from './user.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly userService: UserService) {}
 
   @Post('create')
-  create(@Body() userData: Partial<User>) {
-    return this.userService.create(userData);
+  @UsePipes(new ValidationPipe({ whitelist: true }))
+  create(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 
   @Get()

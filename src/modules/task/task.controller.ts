@@ -6,18 +6,22 @@ import {
   Param,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { Task } from './entity/task.entity';
 import { TaskService } from './task.service';
+import { CreateTaskDto } from './dto/create-task.dto';
 
 @Controller('tasks')
 export class TasksController {
   constructor(private readonly taskService: TaskService) {}
 
-  @Post('create')
-  create(@Body() taskData: Partial<Task>) {
-    return this.taskService.create(taskData);
-  }
+@Post('create')
+@UsePipes(new ValidationPipe({ whitelist: true }))
+create(@Body() createTaskDto: CreateTaskDto) {
+  return this.taskService.create(createTaskDto);
+}
 
   @Get()
   findAll() {
