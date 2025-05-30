@@ -49,6 +49,20 @@ export const useTodoStore = defineStore("todo", {
         console.error("Failed to toggle todo status:", err);
       }
     },
+    async clearAll() {
+      try {
+        // Only delete completed tasks
+        const completed = this.todos.filter((todo) => todo.completedAt);
+        await Promise.all(
+          completed.map((todo) =>
+            axios.delete(`http://localhost:3100/tasks/${todo.id}`)
+          )
+        );
+        await this.fetchTodos();
+      } catch (error) {
+        console.error("Failed to clear completed todos:", error);
+      }
+    },
   },
 
   getters: {
