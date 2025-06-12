@@ -3,7 +3,8 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { BookResolver } from './modules/book/book.resolver';
+import { HotelModule } from './modules/hotel/hotel.module';
+import { BookingModule } from './modules/book/book.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { BookResolver } from './modules/book/book.resolver';
       playground: true,
       typePaths: ['./**/*.graphql'],
     }),
-    BookResolver,
+    BookingModule,
+    HotelModule,
   ],
   controllers: [AppController],
   providers: [AppService],

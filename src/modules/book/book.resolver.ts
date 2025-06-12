@@ -1,81 +1,36 @@
+// src/modules/booking/booking.resolver.ts
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { BookingService, Booking } from './booking.service';
 
-@Resolver('Book')
-export class BookResolver {
-  private books = [
-    {
-      id: 1,
-      title: 'Mathematic',
-      author: 'Dara',
-      price: 10,
-    },
-    {
-      id: 2,
-      title: 'Physic',
-      author: 'Sok',
-      price: 20,
-    },
-    {
-      id: 3,
-      title: 'Chemistry',
-      author: 'Ratha',
-      price: 15,
-    },
-  ];
-  @Query('books')
-  getAllBooks() {
-    return this.books;
+@Resolver('Booking')
+export class BookingResolver {
+  constructor(private readonly bookingService: BookingService) {}
+
+  @Query('bookings')
+  getBookings(
+    @Args('startDate') startDate: string,
+    @Args('endDate') endDate: string,
+  ) {
+    return this.bookingService.findAll(startDate, endDate);
   }
 
-  @Query('book')
-  getBookById(@Args('id') id: number) {
-    return this.books.find((book) => book.id == id);
-  }
-
-  @Mutation('addBook')
-  addBook(@Args('title') title: string, @Args('price') price: number) {
-    const sortedBooks = this.books.sort((a, b) => a.id - b.id);
-    const lastId =
-      sortedBooks.length > 0 ? sortedBooks[sortedBooks.length - 1].id : 0;
-    const newBook = {
-      id: lastId + 1,
-      title,
-      price,
-      author: 'Unknown',
-    };
-    this.books.push(newBook);
-    return newBook;
-  }
-  @Mutation('updateBook')
-  updateBook(
-    @Args('id') id: number,
-    @Args('title') title: string,
+  @Mutation('bookHotel')
+  bookHotel(
+    @Args('hotel_id') hotel_id: number,
+    @Args('start_date') start_date: string,
+    @Args('end_date') end_date: string,
     @Args('price') price: number,
   ) {
-    const bookIndex = this.books.findIndex((book) => book.id == id);
-    if (bookIndex === -1) {
-      throw new Error('Book not found');
-    }
-    const updatedBook = {
-      ...this.books[bookIndex],
-      title,
-      price,
-    };
-    this.books[bookIndex] = updatedBook;
-    return updatedBook;
+    return this.bookingService.create(hotel_id, start_date, end_date, price);
   }
-  @Mutation('deleteBook')
-  deleteBook(@Args('id') id: number) {
-    try {
-      const bookIndex = this.books.findIndex((book) => book.id == id);
-      if (bookIndex === -1) {
-        return false;
-      }
-      this.books.splice(bookIndex, 1);
-      return true;
-    } catch (e) {
-      console.error(e);
-      return false;
-    }
+
+  @Mutation('cancelBooking')
+  cancelBooking(@Args('id') id: number) {
+    return this.bookingService.cancel(id);
+  }
+
+  @Mutation('checkIn')
+  checkIn(@Args('id') id: number) {
+    return this.bookingService.checkIn(id);
   }
 }

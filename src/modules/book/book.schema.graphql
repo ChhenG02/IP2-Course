@@ -1,17 +1,19 @@
-type Book {
+# src/modules/booking/booking.schema.graphql
+type Booking {
   id: ID!
-  title: String!
-  author: String!
-  price: Int!
+  start_date: String!
+  end_date: String!
+  hotel_id: ID!
+  is_checked_in: Boolean!
+  price: Float!
 }
 
 type Query {
-  books: [Book]
-  book(id: ID!): Book
+  bookings(startDate: String!, endDate: String!): [Booking]
 }
 
 type Mutation {
-  addBook(title: String!, price: Int!): Book
-  updateBook(id: ID!, title: String, price: Int): Book
-  deleteBook(id: ID!): Boolean
+  bookHotel(hotel_id: ID!, start_date: String!, end_date: String!, price: Float!): Booking
+  cancelBooking(id: ID!): Booking
+  checkIn(id: ID!): Booking
 }
