@@ -25,12 +25,12 @@ export class BookingResolver {
   }
 
   @Mutation('cancelBooking')
-  cancelBooking(@Args('id') id: number) {
-    return this.bookingService.cancel(id);
+  cancelBooking(@Args('id') id: string) {
+    return this.bookingService.cancel(Number(id));
   }
 
   @Mutation('checkIn')
-  checkIn(@Args('id') id: number) {
-    return this.bookingService.checkIn(id);
+  checkIn(@Args('id') id: string) {
+    return this.bookingService.checkIn(Number(id));
   }
 }
